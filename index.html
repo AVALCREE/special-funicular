@@ -3,29 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guardian Platform | Vanta Waves</title>
+  <title>WaterReflection.com | Vanta Waves</title>
   <meta name="description" content="A futuristic development interface with code editor, Vanta Waves, and a smart terminal." />
-  <meta name="keywords" content="GuardianAV, Code Editor, Vanta Waves, Terminal, JS CLI, DOOM, Emulator" />
-  <meta name="author" content="GuardianAV" />
+  <meta name="keywords" content="WaterReflection, Code Editor, Vanta Waves, Terminal, JS CLI, DOOM, Emulator" />
+  <meta name="author" content="WaterReflection" />
   <meta name="theme-color" content="#000000" />
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Guardian Platform",
-    "url": "https://guardianav.xyz",
-    "about": {
-      "@type": "Thing",
-      "name": "Code Tools and Terminal Simulation"
-    },
-    "keywords": ["GuardianAV", "Terminal", "Code Editor", "Web CLI", "Emulators"]
+    "name": "WaterReflection.com",
+    "url": "https://waterreflection.com",
+    "description": "A platform offering code editing and terminal emulation tools."
   }
   </script>
 
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Guardian Platform" />
-  <meta property="og:title" content="Guardian Dev Platform with Vanta Waves" />
+  <meta property="og:site_name" content="WaterReflection" />
+  <meta property="og:title" content="WaterReflection Dev Platform with Vanta Waves" />
   <meta property="og:description" content="A futuristic editor and terminal interface." />
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -108,7 +104,7 @@
     </div>
 
     <div id="doom" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
-      <iframe src="https://js-dos.com/cdn/build/6.22/current/loader.html?package=https://js-dos.com/cdn/archive/DOOM-Shareware-1.9.zip" width="640" height="480"></iframe>
+      <iframe src="https://archive.org/embed/msdos_DOOM_1993" width="640" height="480"></iframe>
     </div>
 
     <div id="cattle" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
@@ -120,7 +116,8 @@
     </div>
 
     <footer class="text-center text-gray-400 text-sm mt-10">
-      <p>&copy; 2025 GuardianAV</p>
+      <p>&copy; 2025 WaterReflection.com</p>
+      <p>Developer: [Your Name]</p>
     </footer>
   </div>
 
@@ -177,7 +174,7 @@
 
     async function executeCode(language) {
       const code = editor.getValue();
-      const apiUrl = "https://emkc.org/api/v2/piston/execute";
+      let apiUrl = "https://emkc.org/api/v2/piston/execute";
 
       const langMap = {
         python: 'python3',
