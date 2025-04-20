@@ -3,171 +3,116 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WaterReflection | Retro Hub</title>
-  <meta name="description" content="Play classic DOOM, Crazy Cattle 3D, and an interactive terminal game with a water wave background." />
-  <meta name="keywords" content="WaterReflection, DOOM, Crazy Cattle 3D, terminal game, tsParticles" />
+  <title>Retro Hub | Vanta Waves</title>
+  <meta name="description" content="Classic games with a stunning Vanta Waves background." />
+  <meta name="keywords" content="DOOM, Crazy Cattle, CLI, waves background" />
   <meta name="author" content="WaterReflection" />
-  <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#000000" />
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- tsParticles -->
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.8.1/tsparticles.bundle.min.js"></script>
-  <!-- js-dos for DOOM -->
-  <script src="https://js-dos.com/6.22/js-dos.js"></script>
-  <!-- jQuery & jQuery Terminal -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+
+  <!-- Vanta.js dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.waves.min.js"></script>
 
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      background: #000;
-      color: #fff;
       width: 100%;
       height: 100%;
+      font-family: sans-serif;
+      color: white;
       overflow: hidden;
     }
-    #particles-js {
+    #vanta-bg {
       position: fixed;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
+      top: 0;
+      left: 0;
       z-index: -1;
     }
-    .hidden { display: none; }
-    iframe { max-width: 100%; }
-    #dosbox, #cattleContainer, #cli-game { margin-bottom: 2rem; }
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      padding: 2rem 1rem;
+    }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
-<body class="flex flex-col items-center pt-8 px-4">
+<body>
+  <div id="vanta-bg"></div>
 
-  <!-- Particle Background -->
-  <div id="particles-js"></div>
+  <div class="content flex flex-col items-center">
+    <div class="flex flex-wrap gap-4 mb-8">
+      <button onclick="toggleGame('doom')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">Toggle DOOM</button>
+      <button onclick="toggleGame('cattle')" class="bg-green-600 hover:bg-green-800 px-4 py-2 rounded">Toggle Crazy Cattle</button>
+      <button onclick="toggleGame('terminal')" class="bg-gray-600 hover:bg-gray-800 px-4 py-2 rounded">Toggle Terminal</button>
+    </div>
 
-  <!-- Toggle Buttons -->
-  <div class="flex flex-wrap gap-4 mb-8 justify-center">
-    <button onclick="toggleParticles()" class="bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded">Toggle Particles</button>
-    <button onclick="toggleDoom()" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">Toggle DOOM</button>
-    <button onclick="toggleCattle()" class="bg-green-600 hover:bg-green-800 px-4 py-2 rounded">Toggle Crazy Cattle</button>
-    <button onclick="toggleTerminal()" class="bg-gray-600 hover:bg-gray-800 px-4 py-2 rounded">Toggle Terminal</button>
+    <div id="doom" class="hidden w-full max-w-4xl mb-6">
+      <p class="text-red-500">DOOM is temporarily disabled due to wasm loading issues.</p>
+    </div>
+
+    <div id="cattle" class="hidden">
+      <iframe src="https://html-classic.itch.zone/html/13409992/index.html" width="640" height="480" class="rounded border border-gray-700"></iframe>
+    </div>
+
+    <div id="terminal" class="hidden w-full max-w-4xl h-[500px] mt-6 border border-gray-600 rounded">
+      <div id="cli-game" class="h-full"></div>
+    </div>
+
+    <footer class="text-center text-gray-400 text-sm mt-10">
+      <p>&copy; 2025 WaterReflection</p>
+    </footer>
   </div>
-
-  <!-- DOOM Emulator -->
-  <div id="dosbox" class="hidden"></div>
-
-  <!-- Crazy Cattle 3D Embed -->
-  <div id="cattleContainer" class="hidden">
-    <iframe src="https://html-classic.itch.zone/html/13409992/index.html" width="640" height="480" class="rounded-lg border border-gray-700 shadow-lg"></iframe>
-  </div>
-
-  <!-- Terminal Game -->
-  <div id="cli-game" class="hidden"></div>
-
-  <!-- Credits -->
-  <footer class="text-center text-gray-400 text-sm mt-auto pb-8">
-    <p>&copy; 2025 WaterReflection</p>
-    <p>Games from Archive.org (DOOM) and Itch.io (Crazy Cattle 3D). Terminal emulator by jQuery Terminal.</p>
-  </footer>
 
   <script>
-    // Initialize tsParticles with a wave-like effect
-    tsParticles.load("particles-js", {
-      fullScreen: { enable: false },
-      background: { color: "#000000" },
-      particles: {
-        number: { value: 100, density: { enable: true, area: 800 } },
-        color: { value: "#ffffff" },
-        shape: { type: "circle" },
-        opacity: { value: 0.5 },
-        size: { value: 3, random: true },
-        move: {
-          enable: true,
-          speed: 2,
-          direction: "bottom",
-          straight: false,
-          outModes: { default: "out" }
-        },
-        links: {
-          enable: true,
-          distance: 150,
-          color: "#ffffff",
-          opacity: 0.4,
-          width: 1
-        }
-      },
-      interactivity: {
-        events: {
-          onHover: { enable: true, mode: "repulse" },
-          onClick: { enable: true, mode: "push" }
-        },
-        modes: {
-          repulse: { distance: 100 },
-          push: { quantity: 4 }
-        }
-      },
-      retina_detect: true
+    VANTA.WAVES({
+      el: "#vanta-bg",
+      color: 0x111111,
+      shininess: 50,
+      waveHeight: 20,
+      waveSpeed: 1,
+      zoom: 1.25
     });
 
-    // Toggle functions
-    function toggleParticles() {
-      const el = document.getElementById('particles-js');
-      el.style.display = (el.style.display === 'none') ? 'block' : 'none';
-    }
-
-    function toggleDoom() {
-      const el = document.getElementById('dosbox');
-      const show = el.classList.toggle('hidden');
-      if (window.dosCI) {
-        show ? dosCI.unmute() : dosCI.mute();
-      }
-    }
-
-    function toggleCattle() {
-      document.getElementById('cattleContainer').classList.toggle('hidden');
-    }
-
-    function toggleTerminal() {
-      document.getElementById('cli-game').classList.toggle('hidden');
-    }
-
-    // Initialize js-dos for DOOM
-    let dosCI;
-    Dos(document.getElementById('dosbox'))
-      .then(dos => dos.run('https://js-dos.com/cdn/archive/DOOM-Shareware-1.9.zip'))
-      .then(ci => {
-        dosCI = ci;
-        ci.mute();
-        ci.resize(640, 480);
+    $(function() {
+      $('#cli-game').terminal({
+        help: function() {
+          this.echo('Commands: help, ls, dir, cd <dir>, pwd, whoami, date, clear, info, guess <num>');
+        },
+        ls: function() { this.echo('docs/  images/  readme.md'); },
+        dir: function() { this.echo('docs\\  images\\  readme.md'); },
+        cd: function(dir) { this.echo('Changed directory to ' + dir); },
+        pwd: function() { this.echo('/home/guest'); },
+        whoami: function() { this.echo('guest'); },
+        date: function() { this.echo(new Date().toString()); },
+        clear: function() { this.clear(); },
+        info: function() { this.echo('WaterReflection CLI v1.0'); },
+        guess: function(n) {
+          const ans = Math.floor(Math.random() * 10);
+          this.echo(n == ans ? 'Correct!' : 'Wrong, it was ' + ans);
+        }
+      }, {
+        greetings: 'WaterReflection Shell — type "help"',
+        name: 'wr_shell',
+        height: 500,
+        prompt: 'guest@wr:~$ '
       });
-
-    // Initialize jQuery Terminal
-    $('#cli-game').terminal({
-      help: function() {
-        this.echo('Commands: help, ls, dir, cd <dir>, pwd, whoami, date, clear, info, guess <num>');
-      },
-      ls: function() { this.echo('docs/  images/  readme.md'); },
-      dir: function() { this.echo('docs\\  images\\  readme.md'); },
-      cd: function(dir) { this.echo('Changed directory to ' + dir); },
-      pwd: function() { this.echo('/home/guest'); },
-      whoami: function() { this.echo('guest'); },
-      date: function() { this.echo(new Date().toString()); },
-      clear: function() { this.clear(); },
-      info: function() { this.echo('WaterReflection CLI v1.0'); },
-      guess: function(n) {
-        const ans = Math.floor(Math.random() * 10);
-        this.echo(n == ans ? 'Correct!' : 'Wrong, it was ' + ans);
-      }
-    }, {
-      greetings: 'WaterReflection Shell — type "help"',
-      name: 'wr_shell',
-      height: 300,
-      prompt: 'guest@wr:~$ '
     });
+
+    function toggleGame(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+    }
   </script>
 </body>
 </html>
