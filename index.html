@@ -1,65 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>WaterReflection</title>
-  <meta name="description" content="A fun and mysterious site — dive into randomness and reflection.">
-  <meta name="keywords" content="waterreflection, lolwhat, random site, fun, meme, reflection">
-  <meta name="author" content="WaterReflection Team">
-  <meta name="robots" content="index, follow">
+  <!-- ✅ SEO Meta Tags -->
+  <title>WaterReflection | Play DOOM Online</title>
+  <meta name="description" content="Play classic DOOM online with a live interactive background. Powered by JS-DOS, retro vibes guaranteed." />
+  <meta name="keywords" content="DOOM, play DOOM, retro games, browser games, WaterReflection, JS-DOS, free online game" />
+  <meta name="author" content="WaterReflection" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#000000" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="WaterReflection">
-  <meta property="og:description" content="A fun and mysterious site — dive into randomness and reflection.">
-  <meta property="og:url" content="https://www.watereflection.com">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://www.watereflection.com/preview.png">
+  <!-- Open Graph for better social sharing -->
+  <meta property="og:title" content="WaterReflection | Play DOOM Online" />
+  <meta property="og:description" content="Classic DOOM right in your browser. Get nostalgic with this interactive experience on WaterReflection." />
+  <meta property="og:image" content="https://www.watereflection.com/preview.jpg" />
+  <meta property="og:url" content="https://www.watereflection.com/" />
+  <meta property="og:type" content="website" />
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="WaterReflection">
-  <meta name="twitter:description" content="A fun and mysterious site — dive into randomness and reflection.">
-  <meta name="twitter:image" content="https://www.watereflection.com/preview.png">
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="WaterReflection | Play DOOM Online" />
+  <meta name="twitter:description" content="Classic DOOM in your browser with a stylish background. Retro meets modern." />
+  <meta name="twitter:image" content="https://www.watereflection.com/preview.jpg" />
 
-  <!-- Favicon (Optional) -->
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 
   <style>
-    body {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: white;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    html, body {
       margin: 0;
-      text-align: center;
+      padding: 0;
+      overflow-x: hidden;
     }
-    h1 {
-      font-size: 3rem;
-    }
-    p {
-      font-size: 1.2rem;
-      max-width: 600px;
-      margin-top: 20px;
-    }
-    a {
-      color: #00e1ff;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+    #tsparticles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
-<body>
-  <main>
-    <h1>🌊 WaterReflection</h1>
-    <p>Welcome to the randomness. This site is a portal to fun ideas, experimental projects, and meme-ish vibes.</p>
-    <p><a href="mailto:contact@watereflection.com">Contact Us</a></p>
-  </main>
-</body>
-</html>
