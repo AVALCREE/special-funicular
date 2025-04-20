@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WaterReflection | Play Classic DOOM</title>
+  <title>WaterReflection | Retro Fun</title>
 
-  <!-- ✅ SEO Meta Tags -->
-  <meta name="description" content="Play the original DOOM in your browser with a smooth, interactive background.">
-  <meta name="keywords" content="DOOM, classic DOOM, play DOOM online, browser DOOM, WaterReflection">
+  <!-- ✅ SEO -->
+  <meta name="description" content="Play classic DOOM and Crazy Cattle 3D in your browser. Fun retro games with a clean, interactive layout.">
+  <meta name="keywords" content="DOOM online, Crazy Cattle 3D, browser games, retro games, WaterReflection">
   <meta name="author" content="WaterReflection">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Play DOOM Online | WaterReflection">
-  <meta property="og:description" content="Jump back into the classic DOOM directly in your browser.">
+  <meta property="og:title" content="WaterReflection - Play DOOM & Crazy Cattle 3D Online">
+  <meta property="og:description" content="Classic browser-based games with clean design and fun interactivity.">
   <meta property="og:image" content="https://www.watereflection.com/preview.jpg">
   <meta name="theme-color" content="#000000">
 
-  <!-- ✅ Tailwind CSS (for dev only) -->
+  <!-- ✅ Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- ✅ particles.js from Cloudflare -->
+  <!-- ✅ Particles.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 
   <style>
@@ -26,64 +26,62 @@
       margin: 0;
       padding: 0;
       background-color: black;
-      overflow: hidden;
     }
+
     #particles-js {
       position: fixed;
       width: 100%;
       height: 100%;
       z-index: -1;
+      display: none;
     }
   </style>
 </head>
-<body class="text-white relative h-screen flex flex-col items-center justify-center">
+<body class="text-white h-full min-h-screen flex flex-col items-center justify-start pt-10 px-4">
 
   <!-- ✅ Particles Background -->
   <div id="particles-js"></div>
 
-  <!-- ✅ Main Content -->
-  <div class="text-center z-10">
-    <h1 class="text-4xl font-bold mb-4">Welcome to WaterReflection</h1>
-    <p class="mb-6 text-lg text-gray-300">Play the classic DOOM right here in your browser. No install needed.</p>
-
-    <!-- ✅ Working DOOM Embed -->
-    <iframe src="https://archive.org/embed/msdos_DOOM_1993" width="640" height="500" class="rounded-lg shadow-lg border border-gray-700"></iframe>
+  <!-- ✅ Toggle Buttons -->
+  <div class="flex gap-4 mb-6 flex-wrap justify-center">
+    <button onclick="toggleParticles()" class="bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded-lg font-semibold transition">Toggle Particles</button>
+    <button onclick="toggleDoom()" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded-lg font-semibold transition">Toggle DOOM</button>
+    <button onclick="toggleCattle()" class="bg-green-600 hover:bg-green-800 px-4 py-2 rounded-lg font-semibold transition">Toggle Crazy Cattle</button>
   </div>
 
-  <!-- ✅ particles.js config -->
+  <!-- ✅ DOOM Embed -->
+  <div id="doomContainer" class="mb-10 hidden">
+    <iframe src="https://archive.org/embed/msdos_DOOM_1993" width="640" height="500" class="rounded-lg border border-gray-700 shadow-lg"></iframe>
+  </div>
+
+  <!-- ✅ Crazy Cattle 3D Embed -->
+  <div id="cattleContainer" class="mb-12 hidden">
+    <iframe frameborder="0" src="https://html-classic.itch.zone/html/13409992/index.html" width="640" height="480" class="rounded-lg border border-gray-700 shadow-lg"></iframe>
+  </div>
+
+  <!-- ✅ Credits -->
+  <footer class="text-center text-gray-400 text-sm mt-auto pb-8">
+    <p>© 2025 WaterReflection</p>
+    <p>Games from Archive.org and Itch.io. All rights belong to their respective creators.</p>
+  </footer>
+
+  <!-- ✅ JavaScript for Interactivity -->
   <script>
+    // Initialize Particles
     particlesJS("particles-js", {
       "particles": {
-        "number": {
-          "value": 80,
-          "density": { "enable": true, "value_area": 800 }
-        },
+        "number": { "value": 80, "density": { "enable": true, "value_area": 800 }},
         "color": { "value": "#ffffff" },
         "shape": { "type": "circle" },
-        "opacity": {
-          "value": 0.5,
-          "random": false
-        },
-        "size": {
-          "value": 3,
-          "random": true
-        },
+        "opacity": { "value": 0.5 },
+        "size": { "value": 3, "random": true },
         "line_linked": {
-          "enable": true,
-          "distance": 150,
-          "color": "#ffffff",
-          "opacity": 0.4,
-          "width": 1
+          "enable": true, "distance": 150,
+          "color": "#ffffff", "opacity": 0.4, "width": 1
         },
-        "move": {
-          "enable": true,
-          "speed": 2,
-          "direction": "none",
-          "out_mode": "out"
-        }
+        "move": { "enable": true, "speed": 2, "out_mode": "out" }
       },
       "interactivity": {
-        "detect_on": "canvas",
         "events": {
           "onhover": { "enable": true, "mode": "repulse" },
           "onclick": { "enable": true, "mode": "push" }
@@ -95,6 +93,21 @@
       },
       "retina_detect": true
     });
+
+    function toggleParticles() {
+      const particlesDiv = document.getElementById('particles-js');
+      particlesDiv.style.display = (particlesDiv.style.display === 'none') ? 'block' : 'none';
+    }
+
+    function toggleDoom() {
+      const doomDiv = document.getElementById('doomContainer');
+      doomDiv.classList.toggle('hidden');
+    }
+
+    function toggleCattle() {
+      const cattleDiv = document.getElementById('cattleContainer');
+      cattleDiv.classList.toggle('hidden');
+    }
   </script>
 </body>
 </html>
