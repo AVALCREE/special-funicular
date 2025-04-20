@@ -1,47 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- ✅ SEO Meta Tags -->
   <title>WaterReflection | Play DOOM Online</title>
-  <meta name="description" content="Play classic DOOM online with a live interactive background. Powered by JS-DOS, retro vibes guaranteed." />
-  <meta name="keywords" content="DOOM, play DOOM, retro games, browser games, WaterReflection, JS-DOS, free online game" />
+  <meta name="description" content="Play classic DOOM online with a live interactive background." />
+  <meta name="keywords" content="DOOM, play DOOM, retro games, browser games, WaterReflection, JS-DOS" />
   <meta name="author" content="WaterReflection" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#000000" />
-
-  <!-- Open Graph for better social sharing -->
-  <meta property="og:title" content="WaterReflection | Play DOOM Online" />
-  <meta property="og:description" content="Classic DOOM right in your browser. Get nostalgic with this interactive experience on WaterReflection." />
   <meta property="og:image" content="https://www.watereflection.com/preview.jpg" />
-  <meta property="og:url" content="https://www.watereflection.com/" />
-  <meta property="og:type" content="website" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="WaterReflection | Play DOOM Online" />
-  <meta name="twitter:description" content="Classic DOOM in your browser with a stylish background. Retro meets modern." />
-  <meta name="twitter:image" content="https://www.watereflection.com/preview.jpg" />
-
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Particles.js -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
+      overflow: hidden;
+      background-color: #000;
     }
     #tsparticles {
       position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
       width: 100%;
       height: 100%;
+      z-index: -1;
     }
   </style>
 </head>
+<body class="text-white flex items-center justify-center h-screen relative">
+
+  <div id="tsparticles"></div>
+
+  <div class="text-center z-10">
+    <h1 class="text-4xl font-bold mb-4">Play Classic DOOM Online</h1>
+    <iframe src="https://js-dos.com/cdn/upload/DOOM/doom.html" width="640" height="480" class="rounded-lg border border-gray-700 shadow-lg"></iframe>
+  </div>
+
+  <script>
+    tsParticles.load("tsparticles", {
+      background: { color: { value: "#000000" } },
+      fpsLimit: 60,
+      particles: {
+        color: { value: "#ffffff" },
+        links: { enable: true, color: "#ffffff", distance: 150 },
+        move: { enable: true, speed: 1 },
+        number: { value: 50 },
+        opacity: { value: 0.5 },
+        size: { value: 2 },
+      }
+    });
+  </script>
+
+</body>
+</html>
