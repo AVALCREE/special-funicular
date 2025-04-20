@@ -1,85 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WaterReflection | Retro Hub</title>
+  <meta name="description" content="Play classic DOOM, Crazy Cattle 3D, and an interactive terminal game with a water wave background." />
+  <meta name="keywords" content="WaterReflection, DOOM, Crazy Cattle 3D, terminal game, tsParticles" />
+  <meta name="author" content="WaterReflection" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#000000" />
 
-  <!-- Basic SEO -->
-  <title>WaterReflection | Interactive Particle Background</title>
-  <meta name="description" content="Experience an interactive particle background on WaterReflection.">
-  <meta name="keywords" content="WaterReflection, particles.js, interactive background">
-  <meta name="author" content="WaterReflection">
-  <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#000000">
-
-  <!-- Tailwind CSS (dev CDN) -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Particles.js via Cloudflare CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <!-- tsParticles -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.8.1/tsparticles.bundle.min.js"></script>
+  <!-- js-dos for DOOM -->
+  <script src="https://js-dos.com/6.22/js-dos.js"></script>
+  <!-- jQuery & jQuery Terminal -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
 
   <style>
     html, body {
       margin: 0;
       padding: 0;
+      background: #000;
+      color: #fff;
       width: 100%;
       height: 100%;
-      background-color: #000;
       overflow: hidden;
     }
     #particles-js {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: -1;
     }
+    .hidden { display: none; }
+    iframe { max-width: 100%; }
+    #dosbox, #cattleContainer, #cli-game { margin-bottom: 2rem; }
   </style>
 </head>
-<body class="bg-black text-white flex flex-col items-center justify-center h-full">
+<body class="flex flex-col items-center pt-8 px-4">
 
   <!-- Particle Background -->
   <div id="particles-js"></div>
 
-  <!-- Content -->
-  <h1 class="text-4xl font-bold mb-4">WaterReflection</h1>
-  <p class="mb-6">Enjoy the interactive particle background.</p>
-  <button onclick="toggleParticles()" class="bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded">
-    Toggle Particles
-  </button>
+  <!-- Toggle Buttons -->
+  <div class="flex flex-wrap gap-4 mb-8 justify-center">
+    <button onclick="toggleParticles()" class="bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded">Toggle Particles</button>
+    <button onclick="toggleDoom()" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">Toggle DOOM</button>
+    <button onclick="toggleCattle()" class="bg-green-600 hover:bg-green-800 px-4 py-2 rounded">Toggle Crazy Cattle</button>
+    <button onclick="toggleTerminal()" class="bg-gray-600 hover:bg-gray-800 px-4 py-2 rounded">Toggle Terminal</button>
+  </div>
 
-  <!-- Initialize and Toggle Particles -->
+  <!-- DOOM Emulator -->
+  <div id="dosbox" class="hidden"></div>
+
+  <!-- Crazy Cattle 3D Embed -->
+  <div id="cattleContainer" class="hidden">
+    <iframe src="https://html-classic.itch.zone/html/13409992/index.html" width="640" height="480" class="rounded-lg border border-gray-700 shadow-lg"></iframe>
+  </div>
+
+  <!-- Terminal Game -->
+  <div id="cli-game" class="hidden"></div>
+
+  <!-- Credits -->
+  <footer class="text-center text-gray-400 text-sm mt-auto pb-8">
+    <p>&copy; 2025 WaterReflection</p>
+    <p>Games from Archive.org (DOOM) and Itch.io (Crazy Cattle 3D). Terminal emulator by jQuery Terminal.</p>
+  </footer>
+
   <script>
-    // Initialize particles.js
-    particlesJS("particles-js", {
+    // Initialize tsParticles with a wave-like effect
+    tsParticles.load("particles-js", {
+      fullScreen: { enable: false },
+      background: { color: "#000000" },
       particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
+        number: { value: 100, density: { enable: true, area: 800 } },
         color: { value: "#ffffff" },
         shape: { type: "circle" },
         opacity: { value: 0.5 },
         size: { value: 3, random: true },
-        line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.4, width: 1 },
-        move: { enable: true, speed: 2, out_mode: "out" }
+        move: {
+          enable: true,
+          speed: 2,
+          direction: "bottom",
+          straight: false,
+          outModes: { default: "out" }
+        },
+        links: {
+          enable: true,
+          distance: 150,
+          color: "#ffffff",
+          opacity: 0.4,
+          width: 1
+        }
       },
       interactivity: {
-        detect_on: "canvas",
         events: {
-          onhover: { enable: true, mode: "repulse" },
-          onclick: { enable: true, mode: "push" }
+          onHover: { enable: true, mode: "repulse" },
+          onClick: { enable: true, mode: "push" }
         },
         modes: {
           repulse: { distance: 100 },
-          push: { particles_nb: 4 }
+          push: { quantity: 4 }
         }
       },
       retina_detect: true
     });
 
-    // Toggle particles display
+    // Toggle functions
     function toggleParticles() {
-      const p = document.getElementById('particles-js');
-      p.style.display = (p.style.display === 'none') ? 'block' : 'none';
+      const el = document.getElementById('particles-js');
+      el.style.display = (el.style.display === 'none') ? 'block' : 'none';
     }
+
+    function toggleDoom() {
+      const el = document.getElementById('dosbox');
+      const show = el.classList.toggle('hidden');
+      if (window.dosCI) {
+        show ? dosCI.unmute() : dosCI.mute();
+      }
+    }
+
+    function toggleCattle() {
+      document.getElementById('cattleContainer').classList.toggle('hidden');
+    }
+
+    function toggleTerminal() {
+      document.getElementById('cli-game').classList.toggle('hidden');
+    }
+
+    // Initialize js-dos for DOOM
+    let dosCI;
+    Dos(document.getElementById('dosbox'))
+      .then(dos => dos.run('https://js-dos.com/cdn/archive/DOOM-Shareware-1.9.zip'))
+      .then(ci => {
+        dosCI = ci;
+        ci.mute();
+        ci.resize(640, 480);
+      });
+
+    // Initialize jQuery Terminal
+    $('#cli-game').terminal({
+      help: function() {
+        this.echo('Commands: help, ls, dir, cd <dir>, pwd, whoami, date, clear, info, guess <num>');
+      },
+      ls: function() { this.echo('docs/  images/  readme.md'); },
+      dir: function() { this.echo('docs\\  images\\  readme.md'); },
+      cd: function(dir) { this.echo('Changed directory to ' + dir); },
+      pwd: function() { this.echo('/home/guest'); },
+      whoami: function() { this.echo('guest'); },
+      date: function() { this.echo(new Date().toString()); },
+      clear: function() { this.clear(); },
+      info: function() { this.echo('WaterReflection CLI v1.0'); },
+      guess: function(n) {
+        const ans = Math.floor(Math.random() * 10);
+        this.echo(n == ans ? 'Correct!' : 'Wrong, it was ' + ans);
+      }
+    }, {
+      greetings: 'WaterReflection Shell — type "help"',
+      name: 'wr_shell',
+      height: 300,
+      prompt: 'guest@wr:~$ '
+    });
   </script>
 </body>
 </html>
