@@ -3,20 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retro Hub | Vanta Waves</title>
-  <meta name="description" content="Classic games with a stunning Vanta Waves background." />
-  <meta name="keywords" content="DOOM, Crazy Cattle, CLI, waves background" />
-  <meta name="author" content="WaterReflection" />
+  <title>Guardian Platform | Vanta Waves</title>
+  <meta name="description" content="A futuristic development interface with code editor, Vanta Waves, and a smart terminal." />
+  <meta name="keywords" content="GuardianAV, Code Editor, Vanta Waves, Terminal, JS CLI, DOOM, Emulator" />
+  <meta name="author" content="GuardianAV" />
   <meta name="theme-color" content="#000000" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Guardian Platform",
+    "url": "https://guardianav.xyz",
+    "about": {
+      "@type": "Thing",
+      "name": "Code Tools and Terminal Simulation"
+    },
+    "keywords": ["GuardianAV", "Terminal", "Code Editor", "Web CLI", "Emulators"]
+  }
+  </script>
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Guardian Platform" />
+  <meta property="og:title" content="Guardian Dev Platform with Vanta Waves" />
+  <meta property="og:description" content="A futuristic editor and terminal interface." />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
-
-  <!-- Vanta.js dependencies -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.waves.min.js"></script>
+  <script src="https://unpkg.com/monaco-editor@0.33.0/min/vs/loader.js"></script>
 
   <style>
     html, body {
@@ -27,6 +45,7 @@
       font-family: sans-serif;
       color: white;
       overflow: hidden;
+      background: transparent;
     }
     #vanta-bg {
       position: fixed;
@@ -45,73 +64,142 @@
     .hidden {
       display: none;
     }
+    iframe.linux-frame {
+      width: 100%;
+      height: 500px;
+      border: none;
+      background: black;
+    }
+    #editor {
+      width: 100%;
+      height: 500px;
+      border: 1px solid #444;
+    }
   </style>
 </head>
 <body>
   <div id="vanta-bg"></div>
 
   <div class="content flex flex-col items-center">
-    <div class="flex flex-wrap gap-4 mb-8">
-      <button onclick="toggleGame('doom')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">Toggle DOOM</button>
-      <button onclick="toggleGame('cattle')" class="bg-green-600 hover:bg-green-800 px-4 py-2 rounded">Toggle Crazy Cattle</button>
-      <button onclick="toggleGame('terminal')" class="bg-gray-600 hover:bg-gray-800 px-4 py-2 rounded">Toggle Terminal</button>
+    <div class="flex flex-wrap gap-4 mb-4">
+      <button onclick="toggleSection('terminal')" class="bg-gray-600 hover:bg-gray-800 px-4 py-2 rounded">Terminal</button>
+      <button onclick="toggleSection('editorSection')" class="bg-yellow-600 hover:bg-yellow-800 px-4 py-2 rounded">Code Editor</button>
+      <button onclick="toggleSection('doom')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">DOOM</button>
+      <button onclick="toggleSection('cattle')" class="bg-green-600 hover:bg-green-800 px-4 py-2 rounded">Crazy Cattle</button>
+      <button onclick="toggleSection('linux')" class="bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded">Linux Terminal</button>
     </div>
 
-    <div id="doom" class="hidden w-full max-w-4xl mb-6">
-      <p class="text-red-500">DOOM is temporarily disabled due to wasm loading issues.</p>
+    <div id="terminal" class="hidden w-full max-w-4xl h-[500px] border border-gray-600 rounded mb-6">
+      <div class="flex justify-end p-2 gap-2">
+        <button onclick="executeCode('python')" class="bg-purple-600 hover:bg-purple-800 px-3 py-1 rounded text-sm">Run Python</button>
+        <button onclick="executeCode('bash')" class="bg-purple-600 hover:bg-purple-800 px-3 py-1 rounded text-sm">Run Bash</button>
+      </div>
+      <div id="cli-game" class="h-[440px] px-2"></div>
     </div>
 
-    <div id="cattle" class="hidden">
-      <iframe src="https://html-classic.itch.zone/html/13409992/index.html" width="640" height="480" class="rounded border border-gray-700"></iframe>
+    <div id="editorSection" class="hidden w-full max-w-4xl mb-6">
+      <div class="flex justify-end gap-2 mb-2">
+        <button onclick="selectCode('javascript')" class="bg-cyan-600 hover:bg-cyan-800 px-3 py-1 rounded text-sm">JS</button>
+        <button onclick="selectCode('python')" class="bg-cyan-600 hover:bg-cyan-800 px-3 py-1 rounded text-sm">Python</button>
+        <button onclick="selectCode('cpp')" class="bg-cyan-600 hover:bg-cyan-800 px-3 py-1 rounded text-sm">C++</button>
+        <button onclick="selectCode('html')" class="bg-cyan-600 hover:bg-cyan-800 px-3 py-1 rounded text-sm">HTML</button>
+      </div>
+      <div id="editor"></div>
     </div>
 
-    <div id="terminal" class="hidden w-full max-w-4xl h-[500px] mt-6 border border-gray-600 rounded">
-      <div id="cli-game" class="h-full"></div>
+    <div id="doom" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
+      <iframe src="https://js-dos.com/cdn/build/6.22/current/loader.html?package=https://js-dos.com/cdn/archive/DOOM-Shareware-1.9.zip" width="640" height="480"></iframe>
+    </div>
+
+    <div id="cattle" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
+      <iframe src="https://html-classic.itch.zone/html/13409992/index.html" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
+    </div>
+
+    <div id="linux" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
+      <iframe src="https://copy.sh/v86/?profile=linux" class="linux-frame"></iframe>
     </div>
 
     <footer class="text-center text-gray-400 text-sm mt-10">
-      <p>&copy; 2025 WaterReflection</p>
+      <p>&copy; 2025 GuardianAV</p>
     </footer>
   </div>
 
   <script>
     VANTA.WAVES({
       el: "#vanta-bg",
-      color: 0x111111,
-      shininess: 50,
-      waveHeight: 20,
-      waveSpeed: 1,
-      zoom: 1.25
+      color: 0x0f0f0f,
+      shininess: 80,
+      waveHeight: 25,
+      waveSpeed: 0.5,
+      zoom: 1.15
     });
 
-    $(function() {
-      $('#cli-game').terminal({
-        help: function() {
-          this.echo('Commands: help, ls, dir, cd <dir>, pwd, whoami, date, clear, info, guess <num>');
-        },
-        ls: function() { this.echo('docs/  images/  readme.md'); },
-        dir: function() { this.echo('docs\\  images\\  readme.md'); },
-        cd: function(dir) { this.echo('Changed directory to ' + dir); },
-        pwd: function() { this.echo('/home/guest'); },
-        whoami: function() { this.echo('guest'); },
-        date: function() { this.echo(new Date().toString()); },
-        clear: function() { this.clear(); },
-        info: function() { this.echo('WaterReflection CLI v1.0'); },
-        guess: function(n) {
-          const ans = Math.floor(Math.random() * 10);
-          this.echo(n == ans ? 'Correct!' : 'Wrong, it was ' + ans);
+    $('#cli-game').terminal(function(command) {
+      if (command === 'hello') {
+        this.echo('Hello Developer!');
+      } else if (command === 'date') {
+        this.echo(new Date());
+      } else if (command === 'clear') {
+        this.clear();
+      } else {
+        try {
+          const result = window.eval(command);
+          if (result !== undefined) this.echo(result);
+        } catch(e) {
+          this.error(e.message);
         }
-      }, {
-        greetings: 'WaterReflection Shell — type "help"',
-        name: 'wr_shell',
-        height: 500,
-        prompt: 'guest@wr:~$ '
+      }
+    }, {
+      greetings: 'Guardian JS Terminal - try typing: hello, date, or JS commands',
+      name: 'guardian_terminal',
+      height: 440,
+      prompt: 'guardian> '
+    });
+
+    function toggleSection(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+    }
+
+    require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.33.0/min/vs' }});
+    require(["vs/editor/editor.main"], function () {
+      window.editor = monaco.editor.create(document.getElementById("editor"), {
+        value: "console.log('Hello, GuardianAV');",
+        language: "javascript",
+        theme: "vs-dark",
+        automaticLayout: true
       });
     });
 
-    function toggleGame(id) {
-      const el = document.getElementById(id);
-      el.classList.toggle('hidden');
+    function selectCode(lang) {
+      monaco.editor.setModelLanguage(editor.getModel(), lang);
+    }
+
+    async function executeCode(language) {
+      const code = editor.getValue();
+      const apiUrl = "https://emkc.org/api/v2/piston/execute";
+
+      const langMap = {
+        python: 'python3',
+        bash: 'bash',
+        javascript: 'javascript',
+        cpp: 'cpp'
+      };
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          language: langMap[language] || language,
+          source: code
+        })
+      });
+
+      const result = await response.json();
+      const output = result?.run?.stdout || result.message || 'Error running code';
+      $('#cli-game').terminal().echo(`Output:\n${output}`);
     }
   </script>
 </body>
