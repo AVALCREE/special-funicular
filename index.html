@@ -8,7 +8,7 @@
   <meta name="keywords" content="WaterReflection, Code Editor, Vanta Waves, Terminal, JS CLI, DOOM, Emulator" />
   <meta name="author" content="WaterReflection" />
   <meta name="theme-color" content="#000000" />
-
+  
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -71,7 +71,7 @@
       height: 500px;
       border: 1px solid #444;
     }
-    /* On-screen keyboard styles */
+    /* On-Screen Keyboard Styles */
     .keyboard {
       display: none;
       position: fixed;
@@ -87,7 +87,6 @@
       gap: 5px;
       justify-items: center;
     }
-
     .keyboard button {
       padding: 10px;
       font-size: 18px;
@@ -98,11 +97,9 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
     .keyboard button:hover {
       background-color: #888;
     }
-
     .keyboard-toggle {
       position: fixed;
       bottom: 10px;
@@ -115,7 +112,6 @@
       cursor: pointer;
       z-index: 15;
     }
-
   </style>
 </head>
 <body>
@@ -178,7 +174,6 @@
 
     <footer class="text-center text-gray-400 text-sm mt-10">
       <p>&copy; 2025 WaterReflection.com</p>
-      <p></p>
     </footer>
   </div>
 
@@ -228,38 +223,17 @@
       zoom: 1.15
     });
 
-    $('#cli-game').terminal(function(command) {
-      if (command === 'hello') {
-        this.echo('Hello Developer!');
-      } else if (command === 'date') {
-        this.echo(new Date());
-      } else if (command === 'clear') {
-        this.clear();
-      } else {
-        try {
-          const result = window.eval(command);
-          if (result !== undefined) this.echo(result);
-        } catch(e) {
-          this.error(e.message);
-        }
-      }
-    }, {
-      greetings: 'Guardian JS Terminal - try typing: hello, date, or JS commands',
-      name: 'guardian_terminal',
-      height: 440,
-      prompt: 'guardian> '
-    });
-
+    // Toggle Sections
     function toggleSection(id) {
       const el = document.getElementById(id);
       el.classList.toggle('hidden');
     }
 
+    // Mute/Unmute YouTube
     function toggleMute() {
       const youtubeIframe = document.getElementById("youtubeIframe");
       const muteButton = document.getElementById("muteButton");
 
-      // Toggle mute/unmute
       if (youtubeIframe.muted) {
         youtubeIframe.muted = false;
         muteButton.innerText = "Mute";
@@ -269,6 +243,7 @@
       }
     }
 
+    // Monaco Code Editor Setup
     require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.33.0/min/vs' }});
     require(["vs/editor/editor.main"], function () {
       window.editor = monaco.editor.create(document.getElementById("editor"), {
