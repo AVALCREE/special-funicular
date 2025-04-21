@@ -148,11 +148,11 @@
     </div>
 
     <div id="doom" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
-      <iframe src="https://archive.org/embed/msdos_DOOM_1993" width="640" height="480"></iframe>
+      <iframe id="doomFrame" src="https://archive.org/embed/msdos_DOOM_1993" width="640" height="480"></iframe>
     </div>
 
     <div id="cattle" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
-      <iframe src="https://html-classic.itch.zone/html/13409992/index.html" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
+      <iframe id="cattleFrame" src="https://html-classic.itch.zone/html/13409992/index.html" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
     </div>
 
     <div id="linux" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
@@ -179,34 +179,34 @@
 
   <!-- On-Screen Keyboard -->
   <div id="keyboard" class="keyboard">
-    <button onclick="appendToEditor('q')">Q</button>
-    <button onclick="appendToEditor('w')">W</button>
-    <button onclick="appendToEditor('e')">E</button>
-    <button onclick="appendToEditor('r')">R</button>
-    <button onclick="appendToEditor('t')">T</button>
-    <button onclick="appendToEditor('y')">Y</button>
-    <button onclick="appendToEditor('u')">U</button>
-    <button onclick="appendToEditor('i')">I</button>
-    <button onclick="appendToEditor('o')">O</button>
-    <button onclick="appendToEditor('p')">P</button>
-    <button onclick="appendToEditor('a')">A</button>
-    <button onclick="appendToEditor('s')">S</button>
-    <button onclick="appendToEditor('d')">D</button>
-    <button onclick="appendToEditor('f')">F</button>
-    <button onclick="appendToEditor('g')">G</button>
-    <button onclick="appendToEditor('h')">H</button>
-    <button onclick="appendToEditor('j')">J</button>
-    <button onclick="appendToEditor('k')">K</button>
-    <button onclick="appendToEditor('l')">L</button>
-    <button onclick="appendToEditor(';')">;</button>
-    <button onclick="appendToEditor('z')">Z</button>
-    <button onclick="appendToEditor('x')">X</button>
-    <button onclick="appendToEditor('c')">C</button>
-    <button onclick="appendToEditor('v')">V</button>
-    <button onclick="appendToEditor('b')">B</button>
-    <button onclick="appendToEditor('n')">N</button>
-    <button onclick="appendToEditor('m')">M</button>
-    <button onclick="appendToEditor('space')">Space</button>
+    <button onclick="sendKeyToGame('q')">Q</button>
+    <button onclick="sendKeyToGame('w')">W</button>
+    <button onclick="sendKeyToGame('e')">E</button>
+    <button onclick="sendKeyToGame('r')">R</button>
+    <button onclick="sendKeyToGame('t')">T</button>
+    <button onclick="sendKeyToGame('y')">Y</button>
+    <button onclick="sendKeyToGame('u')">U</button>
+    <button onclick="sendKeyToGame('i')">I</button>
+    <button onclick="sendKeyToGame('o')">O</button>
+    <button onclick="sendKeyToGame('p')">P</button>
+    <button onclick="sendKeyToGame('a')">A</button>
+    <button onclick="sendKeyToGame('s')">S</button>
+    <button onclick="sendKeyToGame('d')">D</button>
+    <button onclick="sendKeyToGame('f')">F</button>
+    <button onclick="sendKeyToGame('g')">G</button>
+    <button onclick="sendKeyToGame('h')">H</button>
+    <button onclick="sendKeyToGame('j')">J</button>
+    <button onclick="sendKeyToGame('k')">K</button>
+    <button onclick="sendKeyToGame('l')">L</button>
+    <button onclick="sendKeyToGame(';')">;</button>
+    <button onclick="sendKeyToGame('z')">Z</button>
+    <button onclick="sendKeyToGame('x')">X</button>
+    <button onclick="sendKeyToGame('c')">C</button>
+    <button onclick="sendKeyToGame('v')">V</button>
+    <button onclick="sendKeyToGame('b')">B</button>
+    <button onclick="sendKeyToGame('n')">N</button>
+    <button onclick="sendKeyToGame('m')">M</button>
+    <button onclick="sendKeyToGame('space')">Space</button>
     <button onclick="clearEditor()">Clear</button>
   </div>
 
@@ -285,22 +285,29 @@
       $('#cli-game').terminal().echo(`Output:\n${output}`);
     }
 
-    // On-Screen Keyboard Functionality
+    // Send Keyboard Input to Iframe Game
+    function sendKeyToGame(value) {
+      const iframeId = getActiveIframeId();
+      const iframe = document.getElementById(iframeId);
+
+      if (iframe) {
+        iframe.contentWindow.postMessage({ key: value }, '*');
+      }
+    }
+
+    // Get active iframe based on the selected section
+    function getActiveIframeId() {
+      if (document.getElementById('doom').classList.contains('hidden') === false) {
+        return 'doomFrame';
+      } else if (document.getElementById('cattle').classList.contains('hidden') === false) {
+        return 'cattleFrame';
+      }
+      return ''; // Default to no iframe
+    }
+
     function toggleKeyboard() {
       const keyboard = document.getElementById("keyboard");
       keyboard.style.display = keyboard.style.display === "grid" ? "none" : "grid";
-    }
-
-    function appendToEditor(value) {
-      const editor = window.editor;
-      const currentValue = editor.getValue();
-      if (value === 'space') {
-        editor.setValue(currentValue + ' ');
-      } else if (value === 'clear') {
-        editor.setValue('');
-      } else {
-        editor.setValue(currentValue + value);
-      }
     }
 
     function clearEditor() {
