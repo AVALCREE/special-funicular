@@ -71,6 +71,51 @@
       height: 500px;
       border: 1px solid #444;
     }
+    /* On-screen keyboard styles */
+    .keyboard {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #333;
+      padding: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+      z-index: 10;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 5px;
+      justify-items: center;
+    }
+
+    .keyboard button {
+      padding: 10px;
+      font-size: 18px;
+      background-color: #555;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .keyboard button:hover {
+      background-color: #888;
+    }
+
+    .keyboard-toggle {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background-color: #ff6600;
+      padding: 10px;
+      border-radius: 50%;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+      z-index: 15;
+    }
+
   </style>
 </head>
 <body>
@@ -83,9 +128,9 @@
       <button onclick="toggleSection('doom')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">DOOM</button>
       <button onclick="toggleSection('cattle')" class="bg-green-600 hover:bg-green-800 px-4 py-2 rounded">Crazy Cattle</button>
       <button onclick="toggleSection('linux')" class="bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded">Linux Terminal</button>
-      <button onclick="toggleSection('deadShot')" class="bg-indigo-600 hover:bg-indigo-800 px-4 py-2 rounded">Dead Shot</button> <!-- New Dead Shot Button -->
-      <button onclick="toggleSection('tiktok')" class="bg-pink-600 hover:bg-pink-800 px-4 py-2 rounded">TikTok</button> <!-- New TikTok Button -->
-      <button onclick="toggleSection('youtube')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">YouTube</button> <!-- New YouTube Button -->
+      <button onclick="toggleSection('deadShot')" class="bg-indigo-600 hover:bg-indigo-800 px-4 py-2 rounded">Dead Shot</button>
+      <button onclick="toggleSection('tiktok')" class="bg-pink-600 hover:bg-pink-800 px-4 py-2 rounded">TikTok</button>
+      <button onclick="toggleSection('youtube')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">YouTube</button>
     </div>
 
     <div id="terminal" class="hidden w-full max-w-4xl h-[500px] border border-gray-600 rounded mb-6">
@@ -136,6 +181,42 @@
       <p></p>
     </footer>
   </div>
+
+  <!-- On-Screen Keyboard -->
+  <div id="keyboard" class="keyboard">
+    <button onclick="appendToEditor('q')">Q</button>
+    <button onclick="appendToEditor('w')">W</button>
+    <button onclick="appendToEditor('e')">E</button>
+    <button onclick="appendToEditor('r')">R</button>
+    <button onclick="appendToEditor('t')">T</button>
+    <button onclick="appendToEditor('y')">Y</button>
+    <button onclick="appendToEditor('u')">U</button>
+    <button onclick="appendToEditor('i')">I</button>
+    <button onclick="appendToEditor('o')">O</button>
+    <button onclick="appendToEditor('p')">P</button>
+    <button onclick="appendToEditor('a')">A</button>
+    <button onclick="appendToEditor('s')">S</button>
+    <button onclick="appendToEditor('d')">D</button>
+    <button onclick="appendToEditor('f')">F</button>
+    <button onclick="appendToEditor('g')">G</button>
+    <button onclick="appendToEditor('h')">H</button>
+    <button onclick="appendToEditor('j')">J</button>
+    <button onclick="appendToEditor('k')">K</button>
+    <button onclick="appendToEditor('l')">L</button>
+    <button onclick="appendToEditor(';')">;</button>
+    <button onclick="appendToEditor('z')">Z</button>
+    <button onclick="appendToEditor('x')">X</button>
+    <button onclick="appendToEditor('c')">C</button>
+    <button onclick="appendToEditor('v')">V</button>
+    <button onclick="appendToEditor('b')">B</button>
+    <button onclick="appendToEditor('n')">N</button>
+    <button onclick="appendToEditor('m')">M</button>
+    <button onclick="appendToEditor('space')">Space</button>
+    <button onclick="clearEditor()">Clear</button>
+  </div>
+
+  <!-- Toggle Button -->
+  <button onclick="toggleKeyboard()" class="keyboard-toggle">KB</button>
 
   <script>
     VANTA.WAVES({
@@ -228,7 +309,28 @@
       const output = result?.run?.stdout || result.message || 'Error running code';
       $('#cli-game').terminal().echo(`Output:\n${output}`);
     }
+
+    // On-Screen Keyboard Functionality
+    function toggleKeyboard() {
+      const keyboard = document.getElementById("keyboard");
+      keyboard.style.display = keyboard.style.display === "grid" ? "none" : "grid";
+    }
+
+    function appendToEditor(value) {
+      const editor = window.editor;
+      const currentValue = editor.getValue();
+      if (value === 'space') {
+        editor.setValue(currentValue + ' ');
+      } else if (value === 'clear') {
+        editor.setValue('');
+      } else {
+        editor.setValue(currentValue + value);
+      }
+    }
+
+    function clearEditor() {
+      window.editor.setValue('');
+    }
   </script>
 </body>
 </html>
-
