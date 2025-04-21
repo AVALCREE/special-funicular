@@ -83,6 +83,9 @@
       <button onclick="toggleSection('doom')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">DOOM</button>
       <button onclick="toggleSection('cattle')" class="bg-green-600 hover:bg-green-800 px-4 py-2 rounded">Crazy Cattle</button>
       <button onclick="toggleSection('linux')" class="bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded">Linux Terminal</button>
+      <button onclick="toggleSection('deadShot')" class="bg-indigo-600 hover:bg-indigo-800 px-4 py-2 rounded">Dead Shot</button> <!-- New Dead Shot Button -->
+      <button onclick="toggleSection('tiktok')" class="bg-pink-600 hover:bg-pink-800 px-4 py-2 rounded">TikTok</button> <!-- New TikTok Button -->
+      <button onclick="toggleSection('youtube')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">YouTube</button> <!-- New YouTube Button -->
     </div>
 
     <div id="terminal" class="hidden w-full max-w-4xl h-[500px] border border-gray-600 rounded mb-6">
@@ -113,6 +116,19 @@
 
     <div id="linux" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
       <iframe src="https://copy.sh/v86/?profile=linux" class="linux-frame"></iframe>
+    </div>
+
+    <div id="deadShot" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
+      <iframe src="https://deadshot.io" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
+    </div>
+
+    <div id="tiktok" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
+      <iframe src="https://www.tiktok.com/embed/7098260509466946818" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
+    </div>
+
+    <div id="youtube" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
+      <iframe id="youtubeIframe" src="https://www.youtube.com/embed/dQw4w9WgXcQ" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
+      <button onclick="toggleMute()" id="muteButton" class="bg-blue-600 hover:bg-blue-800 px-3 py-1 rounded text-sm mt-2">Mute/Unmute</button>
     </div>
 
     <footer class="text-center text-gray-400 text-sm mt-10">
@@ -158,6 +174,20 @@
       el.classList.toggle('hidden');
     }
 
+    function toggleMute() {
+      const youtubeIframe = document.getElementById("youtubeIframe");
+      const muteButton = document.getElementById("muteButton");
+
+      // Toggle mute/unmute
+      if (youtubeIframe.muted) {
+        youtubeIframe.muted = false;
+        muteButton.innerText = "Mute";
+      } else {
+        youtubeIframe.muted = true;
+        muteButton.innerText = "Unmute";
+      }
+    }
+
     require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.33.0/min/vs' }});
     require(["vs/editor/editor.main"], function () {
       window.editor = monaco.editor.create(document.getElementById("editor"), {
@@ -201,3 +231,4 @@
   </script>
 </body>
 </html>
+
