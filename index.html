@@ -71,6 +71,7 @@
       height: 500px;
       border: 1px solid #444;
     }
+    /* On-Screen Keyboard Styles */
     .keyboard {
       display: none;
       position: fixed;
@@ -110,6 +111,27 @@
       color: white;
       cursor: pointer;
       z-index: 15;
+    }
+    /* Virtual Mouse (Touch Device) */
+    .virtual-mouse {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.7);
+      pointer-events: none;
+      z-index: 999;
+      display: none;
+    }
+
+    /* Mobile Specific Styles */
+    @media (max-width: 768px) {
+      .keyboard {
+        display: grid;
+      }
+      .virtual-mouse {
+        display: block;
+      }
     }
   </style>
 </head>
@@ -168,74 +190,33 @@
 
     <div id="youtube" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
       <iframe id="youtubeIframe" src="https://www.youtube.com/embed/dQw4w9WgXcQ" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
+      <button onclick="toggleMute()" id="muteButton" class="bg-blue-600 hover:bg-blue-800 px-3 py-1 rounded text-sm mt-2">Mute/Unmute</button>
     </div>
 
-    <!-- Keyboard Section -->
-    <div id="keyboard" class="keyboard">
-      <!-- Alphabet Row -->
-      <button onclick="sendKeyToGame('q')">Q</button>
-      <button onclick="sendKeyToGame('w')">W</button>
-      <button onclick="sendKeyToGame('e')">E</button>
-      <button onclick="sendKeyToGame('r')">R</button>
-      <button onclick="sendKeyToGame('t')">T</button>
-      <button onclick="sendKeyToGame('y')">Y</button>
-      <button onclick="sendKeyToGame('u')">U</button>
-      <button onclick="sendKeyToGame('i')">I</button>
-      <button onclick="sendKeyToGame('o')">O</button>
-      <button onclick="sendKeyToGame('p')">P</button>
-
-      <!-- Second Alphabet Row -->
-      <button onclick="sendKeyToGame('a')">A</button>
-      <button onclick="sendKeyToGame('s')">S</button>
-      <button onclick="sendKeyToGame('d')">D</button>
-      <button onclick="sendKeyToGame('f')">F</button>
-      <button onclick="sendKeyToGame('g')">G</button>
-      <button onclick="sendKeyToGame('h')">H</button>
-      <button onclick="sendKeyToGame('j')">J</button>
-      <button onclick="sendKeyToGame('k')">K</button>
-      <button onclick="sendKeyToGame('l')">L</button>
-
-      <!-- Third Alphabet Row -->
-      <button onclick="sendKeyToGame('z')">Z</button>
-      <button onclick="sendKeyToGame('x')">X</button>
-      <button onclick="sendKeyToGame('c')">C</button>
-      <button onclick="sendKeyToGame('v')">V</button>
-      <button onclick="sendKeyToGame('b')">B</button>
-      <button onclick="sendKeyToGame('n')">N</button>
-      <button onclick="sendKeyToGame('m')">M</button>
-
-      <!-- Special Characters -->
-      <button onclick="sendKeyToGame('1')">1</button>
-      <button onclick="sendKeyToGame('2')">2</button>
-      <button onclick="sendKeyToGame('3')">3</button>
-      <button onclick="sendKeyToGame('4')">4</button>
-      <button onclick="sendKeyToGame('5')">5</button>
-      <button onclick="sendKeyToGame('6')">6</button>
-      <button onclick="sendKeyToGame('7')">7</button>
-      <button onclick="sendKeyToGame('8')">8</button>
-      <button onclick="sendKeyToGame('9')">9</button>
-      <button onclick="sendKeyToGame('0')">0</button>
-
-      <!-- Modifier Keys -->
-      <button onclick="sendKeyToGame('space')">Space</button>
-      <button onclick="sendKeyToGame('enter')">Enter</button>
-      <button onclick="sendKeyToGame('backspace')">Backspace</button>
-
-      <!-- Navigation Keys -->
-      <button onclick="sendKeyToGame('arrow-left')">←</button>
-      <button onclick="sendKeyToGame('arrow-right')">→</button>
-      <button onclick="sendKeyToGame('arrow-up')">↑</button>
-      <button onclick="sendKeyToGame('arrow-down')">↓</button>
-
-      <button onclick="clearEditor()">Clear</button>
-    </div>
-
-    <!-- Toggle Keyboard Button -->
-    <button onclick="toggleKeyboard()" class="keyboard-toggle">KB</button>
+    <footer class="text-center text-gray-400 text-sm mt-10">
+      <p>&copy; 2025 WaterReflection.com</p>
+    </footer>
   </div>
 
+  <!-- Virtual Mouse (Mobile Only) -->
+  <div id="virtualMouse" class="virtual-mouse"></div>
+
+  <!-- On-Screen Keyboard -->
+  <div id="keyboard" class="keyboard">
+    <!-- Keyboard Buttons -->
+    <button onclick="sendKeyToGame('q')">Q</button>
+    <button onclick="sendKeyToGame('w')">W</button>
+    <button onclick="sendKeyToGame('e')">E</button>
+    <button onclick="sendKeyToGame('r')">R</button>
+    <!-- Add other buttons here -->
+    <button onclick="sendKeyToGame('space')">Space</button>
+    <button onclick="clearEditor()">Clear</button>
+  </div>
+
+  <!-- Toggle Button -->
+  <button onclick="toggleKeyboard()" class="keyboard-toggle">KB</button>
+
   <script>
-    // Vanta Waves Background
     VANTA.WAVES({
       el: "#vanta-bg",
       color: 0x0f0f0f,
@@ -245,10 +226,24 @@
       zoom: 1.15
     });
 
-    // Toggle Sections (like terminal, editor, doom, etc.)
+    // Toggle Sections
     function toggleSection(id) {
       const el = document.getElementById(id);
       el.classList.toggle('hidden');
+    }
+
+    // Mute/Unmute YouTube
+    function toggleMute() {
+      const youtubeIframe = document.getElementById("youtubeIframe");
+      const muteButton = document.getElementById("muteButton");
+
+      if (youtubeIframe.muted) {
+        youtubeIframe.muted = false;
+        muteButton.innerText = "Mute";
+      } else {
+        youtubeIframe.muted = true;
+        muteButton.innerText = "Unmute";
+      }
     }
 
     // Monaco Code Editor Setup
@@ -266,7 +261,34 @@
       monaco.editor.setModelLanguage(editor.getModel(), lang);
     }
 
-    // Send Keyboard Input to Active Iframe
+    async function executeCode(language) {
+      const code = editor.getValue();
+      let apiUrl = "https://emkc.org/api/v2/piston/execute";
+
+      const langMap = {
+        python: 'python3',
+        bash: 'bash',
+        javascript: 'javascript',
+        cpp: 'cpp'
+      };
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          language: langMap[language] || language,
+          source: code
+        })
+      });
+
+      const result = await response.json();
+      const output = result?.run?.stdout || result.message || 'Error running code';
+      $('#cli-game').terminal().echo(`Output:\n${output}`);
+    }
+
+    // Send Keyboard Input to Iframe Game
     function sendKeyToGame(value) {
       const iframeId = getActiveIframeId();
       const iframe = document.getElementById(iframeId);
@@ -276,16 +298,14 @@
       }
     }
 
-    // Get active iframe based on selected section
+    // Get active iframe based on the selected section
     function getActiveIframeId() {
       if (document.getElementById('doom').classList.contains('hidden') === false) {
         return 'doomFrame';
       } else if (document.getElementById('cattle').classList.contains('hidden') === false) {
         return 'cattleFrame';
-      } else if (document.getElementById('linux').classList.contains('hidden') === false) {
-        return 'linux-frame';
       }
-      return ''; // Default case
+      return ''; // Default to no iframe
     }
 
     function toggleKeyboard() {
@@ -296,6 +316,17 @@
     function clearEditor() {
       window.editor.setValue('');
     }
+
+    // Virtual Mouse Functionality (Mobile)
+    const virtualMouse = document.getElementById('virtualMouse');
+    document.body.addEventListener('touchmove', (event) => {
+      if (event.touches.length > 0) {
+        const touch = event.touches[0];
+        virtualMouse.style.left = `${touch.pageX - 10}px`;
+        virtualMouse.style.top = `${touch.pageY - 10}px`;
+      }
+    });
   </script>
 </body>
 </html>
+
