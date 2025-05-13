@@ -18,12 +18,13 @@
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.8);
       color: #ffcc00;
-      padding: 8px 16px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ffcc00;
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #ffcc00;
       z-index: 10;
+      transition: opacity 0.5s ease;
     }
 
     iframe {
@@ -35,7 +36,28 @@
   </style>
 </head>
 <body>
-  <div id="notice">⚠️ Minecraft may take a moment to load. Please be patient.</div>
-  <iframe src="https://eaglercraft.com/mc/1.12.2/" allowfullscreen></iframe>
+  <div id="notice">⚠️ Minecraft may take a moment to load. Click inside the window to enable controls.</div>
+  <iframe id="mcframe" src="https://eaglercraft.com/mc/1.12.2/" allowfullscreen></iframe>
+
+  <script>
+    const notice = document.getElementById('notice');
+    const iframe = document.getElementById('mcframe');
+
+    // Remove notice after 6 seconds
+    setTimeout(() => {
+      notice.style.opacity = '0';
+      setTimeout(() => notice.remove(), 500);
+    }, 6000);
+
+    // Auto focus iframe after load (works best with user interaction)
+    iframe.onload = () => {
+      iframe.contentWindow.focus();
+    };
+
+    // Optional: click anywhere to refocus iframe
+    document.body.addEventListener('click', () => {
+      iframe.contentWindow.focus();
+    });
+  </script>
 </body>
 </html>
