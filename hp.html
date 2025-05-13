@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WaterReflection OS</title>
+  <style>
+    /* General Styles */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: url('https://2.bp.blogspot.com/-vmkRMkSvROY/UnJsa9OwaxI/AAAAAAAABfI/ZHNFb9PLpIs/s1600/windows-7-wallpaper-hd.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: "Segoe UI", sans-serif;
+      overflow: hidden;
+      color: white;
+    }
+
+    /* Desktop Container */
+    .desktop {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    /* Taskbar */
+    .taskbar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 40px;
+      width: 100%;
+      background: url('https://raw.githubusercontent.com/EJSnow/Windows-7-skin/refs/heads/main/Taskbar_texture_bottom.png') repeat-x;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      box-shadow: inset 0 1px 0 #444;
+    }
+
+    .start-button {
+      width: 32px;
+      height: 32px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Windows_7_start_button.png/32px-Windows_7_start_button.png') no-repeat center center;
+      background-size: contain;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    /* Window Styles */
+    .window {
+      position: absolute;
+      width: 600px;
+      height: 400px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #00ff00;
+      display: none;
+      flex-direction: column;
+      resize: both;
+      overflow: auto;
+      border-radius: 10px;
+    }
+
+    .window-header {
+      background: #0f0;
+      color: black;
+      padding: 5px;
+      font-weight: bold;
+      cursor: move;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .window-content {
+      padding: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .window-header .close-btn {
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Windows_7_Close_Button.png/32px-Windows_7_Close_Button.png') no-repeat center center;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .window-header .minimize-btn {
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Windows_7_Minimize_Button.png/32px-Windows_7_Minimize_Button.png') no-repeat center center;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    /* Icon Styles */
+    .icon {
+      width: 64px;
+      text-align: center;
+      color: white;
+      margin: 20px;
+      cursor: pointer;
+      user-select: none;
+      position: absolute;
+    }
+
+    .icon svg {
+      width: 48px;
+      height: 48px;
+    }
+
+    /* Aero Glass Effect */
+    .aero-glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop" id="desktop">
+
+    <!-- Terminal Icon -->
+    <div class="icon" style="top: 40px; left: 40px;" onclick="openApp('terminal')">
+      <svg viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="10" fill="#222"/>
+        <text x="15" y="40" font-size="30" fill="#0f0">&gt;_</text>
+      </svg>
+      <div>Terminal</div>
+    </div>
+
+    <!-- AI Icon -->
+    <div class="icon" style="top: 140px; left: 40px;" onclick="openApp('ai')">
+      <svg viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="10" fill="#222"/>
+        <text x="12" y="40" font-size="20" fill="#0ff">AI</text>
+      </svg>
+      <div>AI Bot</div>
+    </div>
+
+    <!-- Miner Icon -->
+    <div class="icon" style="top: 240px; left: 40px;" onclick="openApp('miner')">
+      <svg viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="10" fill="#222"/>
+        <text x="8" y="42" font-size="20" fill="#FFD700">₿</text>
+      </svg>
+      <div>Miner</div>
+    </div>
+
+    <!-- Terminal Window -->
+    <div class="window" id="terminal">
+      <div class="window-header">
+        Terminal
+        <div class="window-controls">
+          <div class="minimize-btn" onclick="minimizeWindow('terminal')"></div>
+          <div class="close-btn" onclick="closeWindow('terminal')"></div>
+        </div>
+      </div>
+      <div class="window-content" id="terminalContent"></div>
+    </div>
+
+    <!-- AI Window -->
+    <div class="window" id="ai">
+      <div class="window-header">
+        AI Bot
+        <div class="window-controls">
+          <div class="minimize-btn" onclick="minimizeWindow('ai')"></div>
+          <div class="close-btn" onclick="closeWindow('ai')"></div>
+        </div>
+      </div>
+      <div class="window-content" id="aiContent">[Press any key]</div>
+    </div>
+
+    <!-- Miner Window -->
+    <div class="window" id="miner">
+      <div class="window-header">
+        Bitcoin Miner
+        <div class="window-controls">
+          <div class="minimize-btn" onclick="minimizeWindow('miner')"></div>
+          <div class="close-btn" onclick="closeWindow('miner')"></div>
+        <      </div>
+      <div class="window-content" id="minerContent">[Click to start mining]</div>
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+      <div class="start-button" title="Start"></div>
+    </div>
+  </div>
+
+  <script>
+    // Open/Close/Minimize Windows
+    function openApp(id) {
+      const win = document.getElementById(id);
+      win.style.display = 'flex';
+      win.style.top = Math.random() * 200 + 'px';
+      win.style.left = Math.random() * 300 + 'px';
+    }
+
+    function closeWindow(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function minimizeWindow(id) {
+      const win = document.getElementById(id);
+      win.style.display = 'none'; // Can extend to minimize to taskbar if needed
+    }
+
+    // Terminal + AI: Key Input Logic
+    document.addEventListener('keydown', () => {
+      if (document.getElementById('terminal').style.display === 'flex') {
+        const output = `> ${randomCode()}\n`;
+        document.getElementById('terminalContent').textContent += output;
+      }
+
+      if (document.getElementById('ai').style.display === 'flex') {
+        const response = `[AI]: ${generateSmartAI()}\n`;
+        document.getElementById('aiContent').textContent += response;
+      }
+    });
+
+    // Miner Logic
+    let mining = false;
+    document.getElementById('minerContent').addEventListener('click', () => {
+      mining = !mining;
+      const content = document.getElementById('minerContent');
+      content.textContent = mining ? "" : "[Mining Stopped]\n";
+      let count = 0;
+
+      if (mining) {
+        const interval = setInterval(() => {
+          if (!mining) return clearInterval(interval);
+          const fakeHash = generateHash();
+          content.textContent += `Mining block ${count++}... HASH: ${fakeHash}\n`;
+          content.scrollTop = content.scrollHeight;
+        }, 150);
+      }
+    });
+
+    // Fake Terminal Code Snippets
+    function randomCode() {
+      const lines = [
+        'console.log("Access granted");',
+        'Decrypting vault keys...',
+        'token = await getToken();',
+        'while(true) { ping(8.8.8.8); }',
+        'uploadPayload("inject.exe");',
+        'start mining daemon...',
+        'AI.goRogue();',
+        'root@localhost:~#',
+      ];
+      return lines[Math.floor(Math.random() * lines.length)];
+    }
+
+    // Smarter Fake AI Generator
+    function generateSmartAI() {
+      const verbs = ['Parsing', 'Compiling', 'Analyzing', 'Decrypting', 'Generating', 'Predicting'];
+      const subjects = ['neural net', 'hash stream', 'quantum entropy', 'syntax tree', 'security keys'];
+      const actions = ['→ SUCCESS', '→ FAILED', '→ RETRYING', '→ 200 OK', '→ TIMED OUT'];
+
+      return `${verbs[Math.floor(Math.random() * verbs.length)]} ${subjects[Math.floor(Math.random() * subjects.length)]} ${actions[Math.floor(Math.random() * actions.length)]}`;
+    }
+
+    // Fake Hash Generator
+    function generateHash() {
+      const chars = 'abcdef0123456789';
+      return Array.from({ length: 64 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+  </script>
+</body>
+</html>
+
+ 
