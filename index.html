@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WaterReflection</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background: black;
-      color: #00ff00;
-      font-family: "Courier New", Courier, monospace;
       overflow: hidden;
+      font-family: 'Segoe UI', monospace;
+      color: #00ffcc;
     }
 
     canvas {
@@ -20,76 +20,81 @@
       z-index: -1;
     }
 
-    .centered {
+    .center {
       position: absolute;
-      top: 40%;
+      top: 45%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
     }
 
     h1 {
-      font-size: 3em;
-      text-shadow: 0 0 10px #00ff00;
+      font-size: 4em;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc, 0 0 20px #008877;
+      margin-bottom: 40px;
     }
 
-    a {
-      color: #00ff00;
-      text-decoration: none;
-      font-size: 1.5em;
-      border: 2px solid #00ff00;
-      padding: 10px 20px;
+    a.button {
       display: inline-block;
-      margin-top: 20px;
-      transition: background 0.3s, color 0.3s;
+      font-size: 1.5em;
+      padding: 15px 30px;
+      border-radius: 12px;
+      text-decoration: none;
+      background: linear-gradient(145deg, #00ffaa, #008877);
+      color: black;
+      box-shadow: 0 0 15px #00ffaa80;
+      transition: all 0.3s ease;
     }
 
-    a:hover {
-      background: #00ff00;
-      color: black;
+    a.button:hover {
+      background: linear-gradient(145deg, #00ddaa, #005555);
+      box-shadow: 0 0 25px #00ffcc;
+      color: white;
     }
   </style>
 </head>
 <body>
   <canvas id="matrix"></canvas>
-  <div class="centered">
+  <div class="center">
     <h1>WaterReflection</h1>
-    <a href="hp.html">💻 Hacking Prank Game</a>
+    <a href="hp.html" class="button">💻 Launch Hacker Desktop</a>
   </div>
 
   <script>
+    // Matrix animation
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
-
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
 
-    const letters = "アァイィウヴエェオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const fontSize = 14;
+    const chars = "01アカサタナハマヤラワABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const fontSize = 16;
     const columns = canvas.width / fontSize;
-    const drops = [];
-
-    for (let x = 0; x < columns; x++) drops[x] = 1;
+    const drops = Array.from({ length: columns }).fill(1);
 
     function draw() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#0F0";
+
+      ctx.fillStyle = "#00ffcc";
       ctx.font = fontSize + "px monospace";
 
       for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        const text = chars[Math.floor(Math.random() * chars.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
           drops[i] = 0;
-        }
-
         drops[i]++;
       }
     }
 
     setInterval(draw, 33);
+    window.addEventListener('resize', () => {
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+    });
   </script>
 </body>
 </html>
