@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FNAF Collection</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #0ff;
+      font-family: 'Segoe UI', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin: 20px 0;
+      font-size: 3em;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .menu {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    button {
+      padding: 12px 24px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00ffaa, #006666);
+      color: black;
+      border: none;
+      font-size: 1.1em;
+      box-shadow: 0 0 12px #00ffaa;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #00ddaa, #003333);
+      color: white;
+      box-shadow: 0 0 20px #00ffcc;
+    }
+
+    .notice {
+      margin-bottom: 10px;
+      font-size: 0.95em;
+      color: #ffaa00;
+      text-shadow: 0 0 5px #ffaa00;
+    }
+
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: none;
+    }
+
+    .visible {
+      display: block !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>FNAF 1–5 Collection</h1>
+
+  <div class="menu">
+    <button onclick="showGame('fnaf1')">FNAF 1</button>
+    <button onclick="showGame('fnaf2')">FNAF 2</button>
+    <button onclick="showGame('fnaf3')">FNAF 3</button>
+    <button onclick="showGame('fnaf4')">FNAF 4</button>
+    <button onclick="showGame('fnaf5')">FNAF 5</button>
+  </div>
+
+  <div class="notice" id="notice"></div>
+
+  <iframe id="fnaf1" src="https://scratch.mit.edu/projects/733953571/embed" allowfullscreen allowtransparency="true" scrolling="no"></iframe>
+  <iframe id="fnaf2" src="https://scratch.mit.edu/projects/930109128/embed" allowfullscreen allowtransparency="true" scrolling="no"></iframe>
+  <iframe id="fnaf3" src="https://scratch.mit.edu/projects/51580960/embed" allowfullscreen allowtransparency="true" scrolling="no"></iframe>
+  <iframe id="fnaf4" src="https://scratch.mit.edu/projects/500148371/embed" allowfullscreen allowtransparency="true" scrolling="no"></iframe>
+  <iframe id="fnaf5" src="https://scratch.mit.edu/projects/222464800/embed" allowfullscreen allowtransparency="true" scrolling="no"></iframe>
+
+  <script>
+    const notices = {
+      fnaf3: "⚠️ Kinda buggy!",
+      fnaf4: "⚠️ A little buggy!",
+    };
+
+    function showGame(gameId) {
+      document.querySelectorAll("iframe").forEach(el => el.classList.remove("visible"));
+      document.getElementById(gameId).classList.add("visible");
+
+      const notice = notices[gameId] || "";
+      document.getElementById("notice").innerText = notice;
+    }
+  </script>
+</body>
+</html>
