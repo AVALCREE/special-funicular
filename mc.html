@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Play Minecraft 1.12.2</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      color: #0ff;
+      font-family: 'Segoe UI', monospace;
+    }
+
+    #notice {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: #ffcc00;
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ffcc00;
+      z-index: 10;
+    }
+
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="notice">⚠️ Minecraft may take a moment to load. Please be patient.</div>
+  <iframe src="https://eaglercraft.com/mc/1.12.2/" allowfullscreen></iframe>
+</body>
+</html>
