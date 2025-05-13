@@ -1,332 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WaterReflection.com | Vanta Waves</title>
-  <meta name="description" content="A futuristic development interface with code editor, Vanta Waves, and a smart terminal." />
-  <meta name="keywords" content="WaterReflection, Code Editor, Vanta Waves, Terminal, JS CLI, DOOM, Emulator" />
-  <meta name="author" content="WaterReflection" />
-  <meta name="theme-color" content="#000000" />
-  
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "WaterReflection.com",
-    "url": "https://waterreflection.com",
-    "description": "A platform offering code editing and terminal emulation tools."
-  }
-  </script>
-
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="WaterReflection" />
-  <meta property="og:title" content="WaterReflection Dev Platform with Vanta Waves" />
-  <meta property="og:description" content="A futuristic editor and terminal interface." />
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.waves.min.js"></script>
-  <script src="https://unpkg.com/monaco-editor@0.33.0/min/vs/loader.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WaterReflection</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      font-family: sans-serif;
-      color: white;
+      background: black;
+      color: #00ff00;
+      font-family: "Courier New", Courier, monospace;
       overflow: hidden;
-      background: transparent;
     }
-    #vanta-bg {
+
+    canvas {
       position: fixed;
-      width: 100%;
-      height: 100%;
       top: 0;
       left: 0;
       z-index: -1;
     }
-    .content {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      padding: 2rem 1rem;
-    }
-    .hidden {
-      display: none;
-    }
-    iframe.linux-frame {
-      width: 100%;
-      height: 500px;
-      border: none;
-      background: black;
-    }
-    #editor {
-      width: 100%;
-      height: 500px;
-      border: 1px solid #444;
-    }
-    /* On-Screen Keyboard Styles */
-    .keyboard {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #333;
-      padding: 10px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-      z-index: 10;
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 5px;
-      justify-items: center;
-    }
-    .keyboard button {
-      padding: 10px;
-      font-size: 18px;
-      background-color: #555;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .keyboard button:hover {
-      background-color: #888;
-    }
-    .keyboard-toggle {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      background-color: #ff6600;
-      padding: 10px;
-      border-radius: 50%;
-      font-size: 20px;
-      color: white;
-      cursor: pointer;
-      z-index: 15;
-    }
-    /* Virtual Mouse (Touch Device) */
-    .virtual-mouse {
+
+    .centered {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.7);
-      pointer-events: none;
-      z-index: 999;
-      display: none;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
     }
 
-    /* Mobile Specific Styles */
-    @media (max-width: 768px) {
-      .keyboard {
-        display: grid;
-      }
-      .virtual-mouse {
-        display: block;
-      }
+    h1 {
+      font-size: 3em;
+      text-shadow: 0 0 10px #00ff00;
+    }
+
+    a {
+      color: #00ff00;
+      text-decoration: none;
+      font-size: 1.5em;
+      border: 2px solid #00ff00;
+      padding: 10px 20px;
+      display: inline-block;
+      margin-top: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    a:hover {
+      background: #00ff00;
+      color: black;
     }
   </style>
 </head>
 <body>
-  <div id="vanta-bg"></div>
-
-  <div class="content flex flex-col items-center">
-    <div class="flex flex-wrap gap-4 mb-4">
-      <button onclick="toggleSection('terminal')" class="bg-gray-600 hover:bg-gray-800 px-4 py-2 rounded">Terminal</button>
-      <button onclick="toggleSection('editorSection')" class="bg-yellow-600 hover:bg-yellow-800 px-4 py-2 rounded">Code Editor</button>
-      <button onclick="toggleSection('doom')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">DOOM</button>
-      <button onclick="toggleSection('cattle')" class="bg-green-600 hover:bg-green-800 px-4 py-2 rounded">Crazy Cattle</button>
-      <button onclick="toggleSection('linux')" class="bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded">Linux Terminal</button>
-      <button onclick="toggleSection('deadShot')" class="bg-indigo-600 hover:bg-indigo-800 px-4 py-2 rounded">Dead Shot</button>
-      <button onclick="toggleSection('tiktok')" class="bg-pink-600 hover:bg-pink-800 px-4 py-2 rounded">TikTok</button>
-      <button onclick="toggleSection('youtube')" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">YouTube</button>
-    </div>
-
-    <div id="terminal" class="hidden w-full max-w-4xl h-[500px] border border-gray-600 rounded mb-6">
-      <div class="flex justify-end p-2 gap-2">
-        <button onclick="executeCode('python')" class="bg-purple-600 hover:bg-purple-800 px-3 py-1 rounded text-sm">Run Python</button>
-        <button onclick="executeCode('bash')" class="bg-purple-600 hover:bg-purple-800 px-3 py-1 rounded text-sm">Run Bash</button>
-      </div>
-      <div id="cli-game" class="h-[440px] px-2"></div>
-    </div>
-
-    <div id="editorSection" class="hidden w-full max-w-4xl mb-6">
-      <div class="flex justify-end gap-2 mb-2">
-        <button onclick="selectCode('javascript')" class="bg-cyan-600 hover:bg-cyan-800 px-3 py-1 rounded text-sm">JS</button>
-        <button onclick="selectCode('python')" class="bg-cyan-600 hover:bg-cyan-800 px-3 py-1 rounded text-sm">Python</button>
-        <button onclick="selectCode('cpp')" class="bg-cyan-600 hover:bg-cyan-800 px-3 py-1 rounded text-sm">C++</button>
-        <button onclick="selectCode('html')" class="bg-cyan-600 hover:bg-cyan-800 px-3 py-1 rounded text-sm">HTML</button>
-      </div>
-      <div id="editor"></div>
-    </div>
-
-    <div id="doom" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
-      <iframe id="doomFrame" src="https://archive.org/embed/msdos_DOOM_1993" width="640" height="480"></iframe>
-    </div>
-
-    <div id="cattle" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
-      <iframe id="cattleFrame" src="https://html-classic.itch.zone/html/13409992/index.html" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
-    </div>
-
-    <div id="linux" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
-      <iframe src="https://copy.sh/v86/?profile=linux" class="linux-frame"></iframe>
-    </div>
-
-    <div id="deadShot" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
-      <iframe src="https://deadshot.io" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
-    </div>
-
-    <div id="tiktok" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
-      <iframe src="https://www.tiktok.com/embed/7098260509466946818" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
-    </div>
-
-    <div id="youtube" class="hidden w-full max-w-4xl border border-gray-600 rounded mb-8">
-      <iframe id="youtubeIframe" src="https://www.youtube.com/embed/dQw4w9WgXcQ" width="640" height="480" class="rounded border border-gray-700 shadow-lg"></iframe>
-      <button onclick="toggleMute()" id="muteButton" class="bg-blue-600 hover:bg-blue-800 px-3 py-1 rounded text-sm mt-2">Mute/Unmute</button>
-    </div>
-
-    <footer class="text-center text-gray-400 text-sm mt-10">
-      <p>&copy; 2025 WaterReflection.com</p>
-    </footer>
+  <canvas id="matrix"></canvas>
+  <div class="centered">
+    <h1>WaterReflection</h1>
+    <a href="hp.html">💻 Hacking Prank Game</a>
   </div>
-
-  <!-- Virtual Mouse (Mobile Only) -->
-  <div id="virtualMouse" class="virtual-mouse"></div>
-
-  <!-- On-Screen Keyboard -->
-  <div id="keyboard" class="keyboard">
-    <!-- Keyboard Buttons -->
-    <button onclick="sendKeyToGame('q')">Q</button>
-    <button onclick="sendKeyToGame('w')">W</button>
-    <button onclick="sendKeyToGame('e')">E</button>
-    <button onclick="sendKeyToGame('r')">R</button>
-    <!-- Add other buttons here -->
-    <button onclick="sendKeyToGame('space')">Space</button>
-    <button onclick="clearEditor()">Clear</button>
-  </div>
-
-  <!-- Toggle Button -->
-  <button onclick="toggleKeyboard()" class="keyboard-toggle">KB</button>
 
   <script>
-    VANTA.WAVES({
-      el: "#vanta-bg",
-      color: 0x0f0f0f,
-      shininess: 80,
-      waveHeight: 25,
-      waveSpeed: 0.5,
-      zoom: 1.15
-    });
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
 
-    // Toggle Sections
-    function toggleSection(id) {
-      const el = document.getElementById(id);
-      el.classList.toggle('hidden');
-    }
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
 
-    // Mute/Unmute YouTube
-    function toggleMute() {
-      const youtubeIframe = document.getElementById("youtubeIframe");
-      const muteButton = document.getElementById("muteButton");
+    const letters = "アァイィウヴエェオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = [];
 
-      if (youtubeIframe.muted) {
-        youtubeIframe.muted = false;
-        muteButton.innerText = "Mute";
-      } else {
-        youtubeIframe.muted = true;
-        muteButton.innerText = "Unmute";
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
       }
     }
 
-    // Monaco Code Editor Setup
-    require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.33.0/min/vs' }});
-    require(["vs/editor/editor.main"], function () {
-      window.editor = monaco.editor.create(document.getElementById("editor"), {
-        value: "console.log('Hello, GuardianAV');",
-        language: "javascript",
-        theme: "vs-dark",
-        automaticLayout: true
-      });
-    });
-
-    function selectCode(lang) {
-      monaco.editor.setModelLanguage(editor.getModel(), lang);
-    }
-
-    async function executeCode(language) {
-      const code = editor.getValue();
-      let apiUrl = "https://emkc.org/api/v2/piston/execute";
-
-      const langMap = {
-        python: 'python3',
-        bash: 'bash',
-        javascript: 'javascript',
-        cpp: 'cpp'
-      };
-
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          language: langMap[language] || language,
-          source: code
-        })
-      });
-
-      const result = await response.json();
-      const output = result?.run?.stdout || result.message || 'Error running code';
-      $('#cli-game').terminal().echo(`Output:\n${output}`);
-    }
-
-    // Send Keyboard Input to Iframe Game
-    function sendKeyToGame(value) {
-      const iframeId = getActiveIframeId();
-      const iframe = document.getElementById(iframeId);
-
-      if (iframe) {
-        iframe.contentWindow.postMessage({ key: value }, '*');
-      }
-    }
-
-    // Get active iframe based on the selected section
-    function getActiveIframeId() {
-      if (document.getElementById('doom').classList.contains('hidden') === false) {
-        return 'doomFrame';
-      } else if (document.getElementById('cattle').classList.contains('hidden') === false) {
-        return 'cattleFrame';
-      }
-      return ''; // Default to no iframe
-    }
-
-    function toggleKeyboard() {
-      const keyboard = document.getElementById("keyboard");
-      keyboard.style.display = keyboard.style.display === "grid" ? "none" : "grid";
-    }
-
-    function clearEditor() {
-      window.editor.setValue('');
-    }
-
-    // Virtual Mouse Functionality (Mobile)
-    const virtualMouse = document.getElementById('virtualMouse');
-    document.body.addEventListener('touchmove', (event) => {
-      if (event.touches.length > 0) {
-        const touch = event.touches[0];
-        virtualMouse.style.left = `${touch.pageX - 10}px`;
-        virtualMouse.style.top = `${touch.pageY - 10}px`;
-      }
-    });
+    setInterval(draw, 33);
   </script>
 </body>
 </html>
-
