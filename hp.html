@@ -34,6 +34,7 @@
       align-items: center;
       padding: 0 10px;
       box-shadow: inset 0 1px 0 #444;
+      z-index: 10;
     }
 
     .start-button {
@@ -43,6 +44,27 @@
       background-size: contain;
       margin-right: 10px;
       cursor: pointer;
+    }
+
+    /* Start Menu */
+    .start-menu {
+      display: none;
+      position: absolute;
+      top: 40px;
+      left: 0;
+      background-color: #222;
+      width: 200px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+      border-radius: 5px;
+      z-index: 20;
+      padding: 10px;
+    }
+
+    .start-menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 5px 0;
     }
 
     /* Window Styles */
@@ -57,6 +79,7 @@
       resize: both;
       overflow: auto;
       border-radius: 10px;
+      transition: all 0.3s ease;
     }
 
     .window-header {
@@ -78,16 +101,8 @@
       flex: 1;
     }
 
-    .window-header .close-btn {
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Windows_7_Close_Button.png/32px-Windows_7_Close_Button.png') no-repeat center center;
-      background-size: contain;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
-
+    .window-header .close-btn,
     .window-header .minimize-btn {
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Windows_7_Minimize_Button.png/32px-Windows_7_Minimize_Button.png') no-repeat center center;
       background-size: contain;
       width: 20px;
       height: 20px;
@@ -103,6 +118,7 @@
       cursor: pointer;
       user-select: none;
       position: absolute;
+      transition: transform 0.3s ease;
     }
 
     .icon svg {
@@ -110,17 +126,43 @@
       height: 48px;
     }
 
-    /* Aero Glass Effect */
+    .icon:hover {
+      transform: scale(1.1);
+    }
+
+    /* Aero Glass Effect (with fallback) */
     .aero-glass {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border-radius: 10px;
     }
+
+    /* Media Query for Mobile Devices */
+    @media (max-width: 768px) {
+      .desktop {
+        width: 100%;
+        height: auto;
+      }
+
+      .window {
+        width: 90%;
+        height: auto;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .icon {
+        width: 48px;
+        text-align: center;
+        font-size: 14px;
+        margin: 10px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="desktop" id="desktop">
-
     <!-- Terminal Icon -->
     <div class="icon" style="top: 40px; left: 40px;" onclick="openApp('terminal')">
       <svg viewBox="0 0 64 64">
@@ -179,14 +221,22 @@
         <div class="window-controls">
           <div class="minimize-btn" onclick="minimizeWindow('miner')"></div>
           <div class="close-btn" onclick="closeWindow('miner')"></div>
-        <      </div>
+        </div>
+      </div>
       <div class="window-content" id="minerContent">[Click to start mining]</div>
     </div>
 
     <!-- Taskbar -->
     <div class="taskbar">
-      <div class="start-button" title="Start"></div>
+      <div class="start-button" title="Start" onclick="toggleStartMenu()"></div>
     </div>
+  </div>
+
+  <!-- Start Menu -->
+  <div class="start-menu" id="startMenu">
+    <a href="#" onclick="openApp('terminal')">Terminal</a>
+    <a href="#" onclick="openApp('ai')">AI Bot</a>
+    <a href="#" onclick="openApp('miner')">Miner</a>
   </div>
 
   <script>
@@ -196,6 +246,7 @@
       win.style.display = 'flex';
       win.style.top = Math.random() * 200 + 'px';
       win.style.left = Math.random() * 300 + 'px';
+      closeStartMenu(); // Close start menu after opening app
     }
 
     function closeWindow(id) {
@@ -204,7 +255,17 @@
 
     function minimizeWindow(id) {
       const win = document.getElementById(id);
-      win.style.display = 'none'; // Can extend to minimize to taskbar if needed
+      win.style.display = 'none'; // Minimize to taskbar (no taskbar icon preview)
+    }
+
+    // Toggle Start Menu visibility
+    function toggleStartMenu() {
+      const startMenu = document.getElementById('startMenu');
+      startMenu.style.display = startMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function closeStartMenu() {
+      document.getElementById('startMenu').style.display = 'none';
     }
 
     // Terminal + AI: Key Input Logic
@@ -270,5 +331,3 @@
   </script>
 </body>
 </html>
-
- 
