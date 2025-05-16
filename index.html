@@ -2,138 +2,156 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WaterReflection</title>
   <style>
    html, body {
-  margin: 0;
-  padding: 0;
-  background: radial-gradient(ellipse at center, #000000 0%, #001a1a 100%);
-  overflow: hidden;
-  font-family: 'Segoe UI', monospace;
-  color: #00ffee;
-}
+     margin: 0;
+     padding: 0;
+     background: radial-gradient(ellipse at center, #000000 0%, #001a1a 100%);
+     overflow: hidden;
+     font-family: 'Segoe UI', monospace;
+     color: #00ffee;
+   }
 
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-}
+   canvas {
+     position: fixed;
+     top: 0;
+     left: 0;
+     z-index: -1;
+   }
 
-.center {
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  animation: fadeIn 2s ease-out forwards;
-  opacity: 0;
-}
+   .center {
+     position: absolute;
+     top: 45%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     text-align: center;
+     animation: fadeIn 2s ease-out forwards;
+     opacity: 0;
+   }
 
-h1 {
-  font-size: 4.5em;
-  color: #00ffee;
-  text-shadow:
-    0 0 10px #00ffee,
-    0 0 20px #00bbcc,
-    0 0 40px #007777;
-  margin-bottom: 50px;
-  animation: neonPulse 3s infinite;
-}
+   h1 {
+     font-size: 4.5em;
+     color: #00ffee;
+     text-shadow:
+       0 0 10px #00ffee,
+       0 0 20px #00bbcc,
+       0 0 40px #007777;
+     margin-bottom: 50px;
+     animation: neonPulse 3s infinite;
+   }
 
-/* Stylish buttons with 3D neon glow */
-a.button {
-  display: inline-block;
-  font-size: 1.4em;
-  padding: 16px 34px;
-  margin: 10px;
-  border-radius: 14px;
-  text-decoration: none;
-  background: rgba(0, 255, 204, 0.1);
-  color: #00ffee;
-  border: 2px solid #00ffee;
-  backdrop-filter: blur(8px);
-  box-shadow:
-    0 0 10px #00ffee66,
-    0 0 20px #00ffee33 inset;
-  transition: all 0.35s ease;
-  position: relative;
-  overflow: hidden;
-}
+   /* Stylish buttons with 3D neon glow */
+   a.button {
+     display: inline-block;
+     font-size: 1.4em;
+     padding: 16px 34px;
+     margin: 10px;
+     border-radius: 14px;
+     text-decoration: none;
+     background: rgba(0, 255, 204, 0.1);
+     color: #00ffee;
+     border: 2px solid #00ffee;
+     backdrop-filter: blur(8px);
+     box-shadow:
+       0 0 10px #00ffee66,
+       0 0 20px #00ffee33 inset;
+     transition: all 0.35s ease;
+     position: relative;
+     overflow: hidden;
+   }
 
-a.button::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(from 180deg at center, #00ffee33, #00ffaa33, #00ffee33);
-  animation: rotateBorder 6s linear infinite;
-  z-index: 0;
-}
+   a.button::before {
+     content: '';
+     position: absolute;
+     top: -50%;
+     left: -50%;
+     width: 200%;
+     height: 200%;
+     background: conic-gradient(from 180deg at center, #00ffee33, #00ffaa33, #00ffee33);
+     animation: rotateBorder 6s linear infinite;
+     z-index: 0;
+   }
 
-a.button:hover {
-  background: rgba(0, 255, 204, 0.25);
-  color: black;
-  box-shadow:
-    0 0 25px #00ffee,
-    0 0 40px #00ffeeaa;
-  transform: scale(1.05);
-}
+   a.button:hover {
+     background: rgba(0, 255, 204, 0.25);
+     color: black;
+     box-shadow:
+       0 0 25px #00ffee,
+       0 0 40px #00ffeeaa;
+     transform: scale(1.05);
+   }
 
-a.button:hover::before {
-  filter: blur(6px);
-}
+   a.button:hover::before {
+     filter: blur(6px);
+   }
 
-a.button span {
-  position: relative;
-  z-index: 1;
-}
+   a.button span {
+     position: relative;
+     z-index: 1;
+   }
 
-/* Animations */
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
+   /* Animations */
+   @keyframes fadeIn {
+     to {
+       opacity: 1;
+     }
+   }
 
-@keyframes rotateBorder {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+   @keyframes rotateBorder {
+     0% {
+       transform: rotate(0deg);
+     }
+     100% {
+       transform: rotate(360deg);
+     }
+   }
 
-@keyframes neonPulse {
-  0%, 100% {
-    text-shadow:
-      0 0 10px #00ffee,
-      0 0 20px #00bbcc,
-      0 0 40px #007777;
-  }
-  50% {
-    text-shadow:
-      0 0 20px #00ffee,
-      0 0 40px #00ccff,
-      0 0 60px #009999;
-  }
-}
+   @keyframes neonPulse {
+     0%, 100% {
+       text-shadow:
+         0 0 10px #00ffee,
+         0 0 20px #00bbcc,
+         0 0 40px #007777;
+     }
+     50% {
+       text-shadow:
+         0 0 20px #00ffee,
+         0 0 40px #00ccff,
+         0 0 60px #009999;
+     }
+   }
+
+   /* Responsive Styles */
+   @media (max-width: 768px) {
+     h1 {
+       font-size: 2.8em;
+     }
+
+     a.button {
+       font-size: 1.1em;
+       padding: 12px 24px;
+     }
+
+     .center {
+       top: 50%;
+       padding: 0 20px;
+     }
+   }
   </style>
 </head>
 <body>
   <canvas id="matrix"></canvas>
   <div class="center">
     <h1>WaterReflection</h1>
-    <a href="hp.html" class="button">💻 Launch Hacker Desktop</a>
-    <a href="fnaf.html" class="button">🎮 FNAF 1–5 Games</a>
-    <a href="mc.html" class="button">⛏️ Play Minecraft 1.12.2</a>
-    <a href="cc3d.html" class="button">🐑 Play CrazyCattle3D</a>
-    <a href="ss.html" class="button">🚅 Play Subway Surfers</a>
-    <a href="sb.html" class="button">🔈 Use SoundBoard</a>
-    <a href="mcc.html" class="button">⛏️ Play Minecraft Classic</a>
+    <a href="hp.html" class="button" role="button" aria-label="Launch Hacker Desktop"><span>💻 Launch Hacker Desktop</span></a>
+    <a href="fnaf.html" class="button" role="button" aria-label="FNAF Games 1–5"><span>🎮 FNAF 1–5 Games</span></a>
+    <a href="mc.html" class="button" role="button" aria-label="Play Minecraft 1.12.2"><span>⛏️ Play Minecraft 1.12.2</span></a>
+    <a href="cc3d.html" class="button" role="button" aria-label="Play CrazyCattle3D"><span>🐑 Play CrazyCattle3D</span></a>
+    <a href="ss.html" class="button" role="button" aria-label="Play Subway Surfers"><span>🚅 Play Subway Surfers</span></a>
+    <a href="sb.html" class="button" role="button" aria-label="Use SoundBoard"><span>🔈 Use SoundBoard</span></a>
+    <a href="mcc.html" class="button" role="button" aria-label="Play Minecraft Classic"><span>⛏️ Play Minecraft Classic</span></a>
   </div>
 
   <script>
@@ -143,7 +161,7 @@ a.button span {
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
 
-    const chars = "01アカサタナハマヤラワABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const chars = "01アカサタナハマヤラワABCDEFGHIJKLMNOPQRSTUVWXYZا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي ٠ ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
     const drops = Array.from({ length: columns }).fill(1);
