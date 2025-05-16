@@ -4,54 +4,123 @@
   <meta charset="UTF-8">
   <title>WaterReflection</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: black;
-      overflow: hidden;
-      font-family: 'Segoe UI', monospace;
-      color: #00ffcc;
-    }
+   html, body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(ellipse at center, #000000 0%, #001a1a 100%);
+  overflow: hidden;
+  font-family: 'Segoe UI', monospace;
+  color: #00ffee;
+}
 
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
 
-    .center {
-      position: absolute;
-      top: 45%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-    }
+.center {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  animation: fadeIn 2s ease-out forwards;
+  opacity: 0;
+}
 
-    h1 {
-      font-size: 4em;
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc, 0 0 20px #008877;
-      margin-bottom: 40px;
-    }
+h1 {
+  font-size: 4.5em;
+  color: #00ffee;
+  text-shadow:
+    0 0 10px #00ffee,
+    0 0 20px #00bbcc,
+    0 0 40px #007777;
+  margin-bottom: 50px;
+  animation: neonPulse 3s infinite;
+}
 
-    a.button {
-      display: inline-block;
-      font-size: 1.5em;
-      padding: 15px 30px;
-      border-radius: 12px;
-      text-decoration: none;
-      background: linear-gradient(145deg, #00ffaa, #008877);
-      color: black;
-      box-shadow: 0 0 15px #00ffaa80;
-      transition: all 0.3s ease;
-    }
+/* Stylish buttons with 3D neon glow */
+a.button {
+  display: inline-block;
+  font-size: 1.4em;
+  padding: 16px 34px;
+  margin: 10px;
+  border-radius: 14px;
+  text-decoration: none;
+  background: rgba(0, 255, 204, 0.1);
+  color: #00ffee;
+  border: 2px solid #00ffee;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 10px #00ffee66,
+    0 0 20px #00ffee33 inset;
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
 
-    a.button:hover {
-      background: linear-gradient(145deg, #00ddaa, #005555);
-      box-shadow: 0 0 25px #00ffcc;
-      color: white;
-    }
+a.button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 180deg at center, #00ffee33, #00ffaa33, #00ffee33);
+  animation: rotateBorder 6s linear infinite;
+  z-index: 0;
+}
+
+a.button:hover {
+  background: rgba(0, 255, 204, 0.25);
+  color: black;
+  box-shadow:
+    0 0 25px #00ffee,
+    0 0 40px #00ffeeaa;
+  transform: scale(1.05);
+}
+
+a.button:hover::before {
+  filter: blur(6px);
+}
+
+a.button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rotateBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow:
+      0 0 10px #00ffee,
+      0 0 20px #00bbcc,
+      0 0 40px #007777;
+  }
+  50% {
+    text-shadow:
+      0 0 20px #00ffee,
+      0 0 40px #00ccff,
+      0 0 60px #009999;
+  }
+}
   </style>
 </head>
 <body>
